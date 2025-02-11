@@ -9,9 +9,11 @@ import { Form } from "../ui/form";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { UserFormValidation } from "@/lib/validation";
+import { useRouter } from "next/navigation";
+import { createUser } from "@/lib/actions/patient.actions";
 
 function PatientForm() {
-  //   const router = useRouter();
+  const router = useRouter();
   const form = useForm<z.infer<typeof UserFormValidation>>({
     resolver: zodResolver(UserFormValidation),
     defaultValues: {
@@ -32,12 +34,12 @@ function PatientForm() {
 
     try {
       const userData = { name, email, phone };
-      console.log(userData);
-      //   const user = await createUser(userDate);
+      const user = await createUser(userData);
 
-      //   if (user) router.push(`/patients/${user.$id}/register`);
       setIsLoading(false);
+      if (user) router.push(`/patients/${user.$id}/register`);
     } catch (error) {
+      setIsLoading(false);
       console.error(error);
     }
   }

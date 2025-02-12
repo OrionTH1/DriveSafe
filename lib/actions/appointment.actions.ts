@@ -1,6 +1,6 @@
 "use server";
 
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import {
   APPOINTMENT_COLLECTION_ID,
   database,
@@ -40,6 +40,54 @@ export const getAppointment = async (appointmentId: string) => {
   } catch (error) {
     console.error(
       "An error occurred while trying to get a appointment: ",
+      error
+    );
+  }
+};
+
+export const getRecentAppointmentList = async () => {
+  try {
+    const appointments = await database.listDocuments(
+      DATABASE_ID!,
+      APPOINTMENT_COLLECTION_ID!,
+      [Query.orderDesc("$createdAt")]
+    );
+
+    const initialCounts = {
+      scheduleCount: 0,
+      pendingCount: 0,
+      canceledCount: 0,
+    };
+
+    const counts = (appointments.documents as Appointment[]).reduce(
+      (acc, appointment) => {
+        switch (appointment.status) {
+          case "scheduled":
+            acc.scheduleCount++;
+            break;
+          case "pending":
+            acc.pendingCount++;
+            break;
+          case "canceled":
+            acc.canceledCount++;
+            break;
+        }
+
+        return acc;
+      },
+      initialCounts
+    );
+
+    const data = {
+      totalCount: appointments.total,
+      ...counts,
+      documents: appointments.documents,
+    };
+
+    return data;
+  } catch (error) {
+    console.error(
+      "An error occurred while trying to get the recent appointment list: ",
       error
     );
   }

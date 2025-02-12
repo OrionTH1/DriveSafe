@@ -6,7 +6,9 @@ import {
   database,
   DATABASE_ID,
 } from "../appwrite.config";
-import { parseStringify } from "@/app/lib/utills";
+import { parseStringify } from "@/lib/utils";
+import { Appointment } from "@/types/appwrite.types";
+import { revalidatePath } from "next/cache";
 
 export const createAppointment = async (
   appointment: CreateAppointmentParams
@@ -88,6 +90,37 @@ export const getRecentAppointmentList = async () => {
   } catch (error) {
     console.error(
       "An error occurred while trying to get the recent appointment list: ",
+      error
+    );
+  }
+};
+
+export const updateAppointment = async ({
+  appointmentId,
+  // userId,
+  appointment,
+}: // type,
+UpdateAppointmentParams) => {
+  try {
+    console.log({ appointment });
+    const updatedAppointment = await database.updateDocument(
+      DATABASE_ID!,
+      APPOINTMENT_COLLECTION_ID!,
+      appointmentId,
+      appointment
+    );
+
+    if (!updatedAppointment) {
+      throw new Error("Appointment not found");
+    }
+
+    // TODO: SMS Notification
+
+    revalidatePath("/admin");
+    return parseStringify(updatedAppointment);
+  } catch (error) {
+    console.error(
+      "An error occurred while trying to update the appointment:",
       error
     );
   }

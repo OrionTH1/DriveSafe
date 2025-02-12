@@ -1,4 +1,4 @@
-import { formatDateTime } from "@/app/lib/utills";
+import { formatDateTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Doctors } from "@/constants";
 import { getAppointment } from "@/lib/actions/appointment.actions";

@@ -1,6 +1,6 @@
 "use client";
 
-import { decryptKey, encryptKey } from "@/app/lib/utills";
+import { decryptKey, encryptKey } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,

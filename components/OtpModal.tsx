@@ -39,7 +39,7 @@ function OtpModal({
   const router = useRouter();
 
   useEffect(() => {
-    // sendEmail(email, name, code);
+    sendEmail(email, name, code);
     console.log("Email enviado");
     console.log(code);
   }, [code, email, name]);

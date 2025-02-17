@@ -15,11 +15,11 @@ function HomeButton({ label, description, icon, redirect }: HomeButtonProps) {
   return (
     <div
       className={
-        "flex flex-1 flex-col gap-10 rounded-2xl bg-cover p-8 shadow-lg bg-appointments"
+        "flex flex-1 flex-col gap-10 rounded-2xl bg-cover p-8 shadow-lg bg-approved"
       }
     >
       <div className="flex flex-col gap-4">
-        <div className="flex gap-4">
+        <div className="flex items-center gap-4">
           <Image
             src={icon}
             width={32}

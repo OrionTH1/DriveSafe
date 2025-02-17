@@ -12,15 +12,13 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import clsx from "clsx";
 import ServiceForm from "./forms/ServiceForm";
-import { Service } from "@/types/appwrite.types";
+import type { Service } from "@/types/appwrite.types";
 
-interface AppointmentModalProps {
+interface ServiceModalProps {
   type: "approve" | "cancel";
-  serviceId: string;
-  userId: string;
   service: Service;
 }
-function AppointmentModal({ type, service, userId }: AppointmentModalProps) {
+function ServiceModal({ type, service }: ServiceModalProps) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -41,15 +39,10 @@ function AppointmentModal({ type, service, userId }: AppointmentModalProps) {
             Please fill in the following details to {type} the service requested
           </DialogDescription>
         </DialogHeader>
-        <ServiceForm
-          type={type}
-          service={service}
-          userId={userId}
-          setOpen={setOpen}
-        />
+        <ServiceForm type={type} service={service} setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
 }
 
-export default AppointmentModal;
+export default ServiceModal;

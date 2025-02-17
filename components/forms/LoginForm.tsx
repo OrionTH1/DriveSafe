@@ -39,8 +39,6 @@ function LoginForm() {
     setIsLoading(true);
 
     try {
-      // const user = await verifyIfUserExists(name, email, phone);
-      // const account = await createAccount(email, password, "Account");
       const account = await authAccount(email, password);
 
       if (account.error === "user_invalid_credentials") {

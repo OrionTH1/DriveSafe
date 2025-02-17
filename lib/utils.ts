@@ -10,6 +10,17 @@ export const parseStringify = (value: unknown) =>
 
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
+export const generateCode = () => {
+  const code = [];
+
+  for (let index = 0; index < 6; index++) {
+    const randomNumber = Math.floor(Math.random() * 9);
+    code.push(randomNumber);
+  }
+
+  return code.join("");
+};
+
 // FORMAT DATE TIME
 export const formatDateTime = (dateString: Date | string) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {

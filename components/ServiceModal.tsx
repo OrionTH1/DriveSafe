@@ -11,22 +11,14 @@ import {
 import { useState } from "react";
 import { Button } from "./ui/button";
 import clsx from "clsx";
-import AppointmentForm from "./forms/AppointmentForm";
-import { Appointment } from "@/types/appwrite.types";
+import ServiceForm from "./forms/ServiceForm";
+import type { Service } from "@/types/appwrite.types";
 
-interface AppointmentModalProps {
-  type: "schedule" | "cancel";
-  patientId: string;
-  userId: string;
-  appointment?: Appointment;
-  description: string;
+interface ServiceModalProps {
+  type: "approve" | "cancel";
+  service: Service;
 }
-function AppointmentModal({
-  type,
-  patientId,
-  userId,
-  appointment,
-}: AppointmentModalProps) {
+function ServiceModal({ type, service }: ServiceModalProps) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -34,7 +26,7 @@ function AppointmentModal({
         <Button
           variant="ghost"
           className={clsx("capitalize", {
-            "text-green-500": type === "schedule",
+            "text-green-500": type === "approve",
           })}
         >
           {type}
@@ -42,21 +34,15 @@ function AppointmentModal({
       </DialogTrigger>
       <DialogContent className="shad-dialog sm:max-w-md">
         <DialogHeader className="mb-4 space-y-3">
-          <DialogTitle className="capitalize">{type} Appointment</DialogTitle>
+          <DialogTitle className="capitalize">{type} Service</DialogTitle>
           <DialogDescription>
-            Please fill in the following details to {type} an appointment
+            Please fill in the following details to {type} the service requested
           </DialogDescription>
         </DialogHeader>
-        <AppointmentForm
-          userId={userId}
-          patientId={patientId}
-          type={type}
-          appointment={appointment}
-          setOpen={setOpen}
-        />
+        <ServiceForm type={type} service={service} setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
 }
 
-export default AppointmentModal;
+export default ServiceModal;

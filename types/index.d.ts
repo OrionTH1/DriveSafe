@@ -1,54 +1,85 @@
+import type {
+  VehicleUseFrequencyEnum,
+  GenderOptionsEnum,
+  MonthlyIncomeEnum,
+  VehicleFuelTypeEnum,
+  VehicleHowWasAcquiredEnum,
+  YesOrNoEnum,
+} from "@/constants";
+import type { z } from "zod";
+import type { Service } from "./appwrite.types";
+
 declare type SearchParamProps = {
   params: Promise<{ [key: string]: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-declare type Gender = "Male" | "Female" | "Other";
-declare type Status = "pending" | "scheduled" | "canceled";
+declare type Gender = z.infer<typeof GenderOptionsEnum>;
+
+declare type YesOrNo = z.infer<typeof YesOrNoEnum>;
+
+declare type MonthlyIncome = z.infer<typeof MonthlyIncomeEnum>;
+
+declare type VehicleFuelType = z.infer<typeof VehicleFuelTypeEnum>;
+
+declare type VehicleUseFrequency = z.infer<typeof VehicleUseFrequencyEnum>;
+
+declare type VehicleHowWasAcquired = z.infer<typeof VehicleHowWasAcquiredEnum>;
+
+declare type Status = "pending" | "approved" | "canceled";
+
+declare type ReturnedUser =
+  | {
+      data: { userId: string; email: string; name: string };
+      error: null;
+    }
+  | {
+      data: null;
+      error: string;
+    };
 
 declare interface CreateUserParams {
+  userId: string;
   name: string;
   email: string;
-  phone: string;
-}
-declare interface User extends CreateUserParams {
-  $id: string;
-}
-
-declare interface RegisterUserParams extends CreateUserParams {
+  password: string;
   userId: string;
   birthDate: Date;
   gender: Gender;
   address: string;
   occupation: string;
-  emergencyContactName: string;
-  emergencyContactNumber: string;
-  primaryPhysician: string;
-  insuranceProvider: string;
-  insurancePolicyNumber: string;
-  allergies?: string;
-  currentMedication?: string;
-  familyMedicalHistory?: string;
-  pastMedicalHistory?: string;
-  identificationType?: string;
-  identificationNumber?: string;
-  identificationDocument?: FormData;
+  phoneNumber: string;
+  monthlyIncome: MonthlyIncome;
+  vehicleMakeModelYear: string;
+  vehicleIdentificationNumber: string;
+  vehicleUseFrequency: VehicleUseFrequency;
+  vehicleCurrentMileage: stirng;
+  vehicleLicensePlateNumber: string;
+  vehicleColor: string;
+  vehicleFuelType: VehicleFuelType;
+  vehicleHowWasAcquired: VehicleHowWasAcquired;
+  vehiclePreviousAccidentsOrDamage?: string;
+  driverLicenseNumber: string;
+  driverLicenseExpirationDate: Date;
+  driverLicensePreviousViolations?: string;
+  driverLicenseEverBeenSuspended: boolean;
+  driverLicenseDocument: FormData;
+  disclosureConsent: boolean;
   privacyConsent: boolean;
 }
+declare interface User extends CreateUserParams {
+  token: string;
+}
 
-declare type CreateAppointmentParams = {
-  userId: string;
-  patient: string;
-  primaryPhysician: string;
+declare type CreateServiceParams = {
+  serviceName: string;
   reason: string;
-  schedule: Date;
   status: Status;
-  note: string | undefined;
+  note?: string;
 };
 
-declare type UpdateAppointmentParams = {
-  appointmentId: string;
-  userId: string;
-  appointment: Appointment;
-  type: string;
+declare type UpdateServiceParams = {
+  service: Service;
+  status: Status;
+  note: string;
 };

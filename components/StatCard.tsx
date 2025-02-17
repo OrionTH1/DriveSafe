@@ -1,3 +1,4 @@
+import type { Status } from "@/types";
 import clsx from "clsx";
 import Image from "next/image";
 
@@ -12,7 +13,7 @@ function StatCard({ count = 0, label, icon, type }: StatCardProps) {
   return (
     <div
       className={clsx("stat-card", {
-        "bg-appointments": type === "scheduled",
+        "bg-approved": type === "approved",
         "bg-cancelled": type === "canceled",
         "bg-pending": type === "pending",
       })}

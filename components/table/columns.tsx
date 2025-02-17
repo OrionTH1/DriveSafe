@@ -1,25 +1,46 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
 import StatusBadge from "../StatusBadge";
+import type { Service } from "@/types/appwrite.types";
+import Link from "next/link";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import { TooltipArrow } from "@radix-ui/react-tooltip";
 import { formatDateTime } from "@/lib/utils";
-import { Doctors } from "@/constants";
-import Image from "next/image";
-import AppointmentModal from "../AppointmentModal";
-import { Appointment } from "@/types/appwrite.types";
+import ServiceModal from "../ServiceModal";
 
-export const columns: ColumnDef<Appointment>[] = [
+export const adminColumns: ColumnDef<Service>[] = [
   {
     header: "ID",
     cell: ({ row }) => <p className="text-14-medium">{row.index + 1}</p>,
   },
   {
-    accessorKey: "patient",
-    header: "Patient",
+    accessorKey: "serviceName",
+    header: "Service",
     cell: ({ row }) => (
-      <p className="text-14-medium">{row.original.patient.name}</p>
+      <p className="text-14-medium">{row.original.serviceName}</p>
     ),
+  },
+
+  {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => {
+      const date = new Date(row.original.$createdAt);
+      return (
+        <div className="min-w-[115px]">
+          <p className="text-14-regular min-w-[100px]">
+            {formatDateTime(date.toString()).dateTime}
+          </p>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "status",
@@ -30,59 +51,110 @@ export const columns: ColumnDef<Appointment>[] = [
       </div>
     ),
   },
-  {
-    accessorKey: "schedule",
-    header: "Appointment",
-    cell: ({ row }) => (
-      <p className="text-14-regular min-w-[100px]">
-        {formatDateTime(row.original.schedule).dateTime}
-      </p>
-    ),
-  },
-  {
-    accessorKey: "primaryPhysician",
-    header: "Doctor",
-    cell: ({ row }) => {
-      const doctor = Doctors.find(
-        (doctor) => doctor.name === row.original.primaryPhysician
-      );
 
-      return (
-        <div className="flex items-center gap-3">
-          <Image
-            src={doctor?.image || ""}
-            width={100}
-            height={100}
-            alt={`Dr. ${doctor?.name} photo`}
-            className="size-8"
-          />
-          <p className="whitespace-nowrap">Dr. {doctor?.name}</p>
-        </div>
-      );
+  {
+    accessorKey: "reason",
+    header: "Request reason",
+    cell: ({ row }) => {
+      if (row.original.note) {
+        return (
+          <TooltipProvider delayDuration={0} disableHoverableContent={false}>
+            <Tooltip>
+              <TooltipTrigger className="cursor-text w-36 truncate">
+                {row.original.reason}
+              </TooltipTrigger>
+              <TooltipContent className="shad-tooltip-content">
+                <p>{row.original.reason}</p>
+                <TooltipArrow className="fill-white" />
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      }
     },
   },
+  {
+    accessorKey: "userInfomations",
+    header: "User Informations",
+    cell: ({ row }) => (
+      <Link href={`user-informations/${row.original.userId}`}>
+        <p className="text-14-regular min-w-[100px] underline">
+          {row.original.userName}
+        </p>
+      </Link>
+    ),
+  },
+
   {
     id: "actions",
     header: () => <div className="pl-4">Actions</div>,
     cell: ({ row: { original: data } }) => {
       return (
         <div className="flex gap-1">
-          <AppointmentModal
-            type="schedule"
-            patientId={data.patient.$id}
-            userId={data.userId}
-            appointment={data}
-            description="Please confirm the following details to scheduled"
-          />
-          <AppointmentModal
-            type="cancel"
-            patientId={data.patient.$id}
-            userId={data.userId}
-            appointment={data}
-            description="Are you sure you want to cancel this appointment?"
-          />
+          <ServiceModal type="approve" service={data} />
+          <ServiceModal type="cancel" service={data} />
         </div>
       );
+    },
+  },
+];
+
+export const userColumns: ColumnDef<Service>[] = [
+  {
+    header: "ID",
+    cell: ({ row }) => <p className="text-14-medium">{row.index + 1}</p>,
+  },
+  {
+    accessorKey: "serviceName",
+    header: "Service",
+    cell: ({ row }) => (
+      <p className="text-14-medium">{row.original.serviceName}</p>
+    ),
+  },
+
+  {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => {
+      const date = new Date(row.original.$createdAt);
+      return (
+        <div className="min-w-[115px]">
+          <p className="text-14-regular min-w-[100px]">
+            {formatDateTime(date.toString()).dateTime}
+          </p>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="min-w-[115px]">
+        <StatusBadge status={row.original.status} />
+      </div>
+    ),
+  },
+
+  {
+    accessorKey: "note",
+    header: "Note",
+    cell: ({ row }) => {
+      if (row.original.note) {
+        return (
+          <TooltipProvider delayDuration={0} disableHoverableContent={false}>
+            <Tooltip>
+              <TooltipTrigger className="cursor-text w-32 truncate">
+                {row.original.note}
+              </TooltipTrigger>
+              <TooltipContent className="shad-tooltip-content">
+                <p>{row.original.note}</p>
+                <TooltipArrow className="fill-white" />
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      }
     },
   },
 ];

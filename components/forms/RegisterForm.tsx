@@ -5,43 +5,62 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import CustomFormField, { FormFieldType } from "../CustomFormField";
-import { Form, FormControl } from "../ui/form";
+import { Form, FormControl, FormMessage } from "../ui/form";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
-  GenderOptions,
-  IdentificationTypes,
-  PatientFormDefaultValues,
-  Doctors,
+  GenderOptionsEnum,
+  MonthlyIncomeEnum,
+  VehicleFuelTypeEnum,
+  VehicleHowWasAcquiredEnum,
+  VehicleUseFrequencyEnum,
+  YesOrNoEnum,
+  getPatientFormDefaultValues,
 } from "@/constants";
 import { Label } from "../ui/label";
 import { SelectItem } from "../ui/select";
-import Image from "next/image";
 import FileUploader from "../FileUploader";
-import { PatientFormValidation } from "@/lib/validation";
-import { registerPatient } from "@/lib/actions/patient.actions";
+import { RegisterFormValidation } from "@/lib/validation";
+import { ID } from "node-appwrite";
+import { registerUser } from "@/lib/actions/user.actions";
+import { CreateUserParams } from "@/types";
+import { loginIn } from "@/lib/actions/auth.actions";
+import { User } from "@/types/appwrite.types";
+import Image from "next/image";
 
-function RegisterForm({ user }: { user: User }) {
+function RegisterForm({
+  user,
+  documentUrl,
+}: {
+  user?: User;
+  documentUrl?: string;
+}) {
   const router = useRouter();
-  const form = useForm<z.infer<typeof PatientFormValidation>>({
-    resolver: zodResolver(PatientFormValidation),
-    defaultValues: { ...PatientFormDefaultValues },
+  const patientFormDefaultValues = getPatientFormDefaultValues(user);
+  const form = useForm<z.infer<typeof RegisterFormValidation>>({
+    resolver: zodResolver(RegisterFormValidation),
+    defaultValues: { ...patientFormDefaultValues },
   });
+  const {
+    formState: { errors },
+  } = form;
+  const isReadOnly = user ? true : false;
 
   const [isLoading, setIsLoading] = useState(false);
 
-  async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
+  async function onSubmit(values: z.infer<typeof RegisterFormValidation>) {
     setIsLoading(true);
+    form.clearErrors();
 
     let formData;
 
     if (
-      values.identificationDocument &&
-      values.identificationDocument.length > 0
+      values.driverLicenseDocument &&
+      values.driverLicenseDocument.length > 0
     ) {
-      const identificationDoc = values.identificationDocument[0];
+      const identificationDoc = values.driverLicenseDocument[0];
       const blobFile = new Blob([identificationDoc], {
         type: identificationDoc.type,
       });
@@ -50,23 +69,41 @@ function RegisterForm({ user }: { user: User }) {
       formData.append("blobFile", blobFile);
       formData.append("fileName", identificationDoc.name);
     }
+    if (!formData) return;
 
     try {
       const patientData = {
         ...values,
-        userId: user.$id,
+        driverLicenseEverBeenSuspended:
+          values.driverLicenseEverBeenSuspended === "Yes" ? true : false,
+        userId: ID.unique(),
         birthDate: new Date(values.birthDate),
-        identificationDocument: formData,
-      };
+        driverLicenseDocument: formData,
+      } as CreateUserParams;
 
-      const patient = await registerPatient(patientData);
+      const user = await registerUser(patientData);
 
-      if (patient) router.push(`/patients/${user.$id}/new-appointment`);
-      setIsLoading(false);
+      // if (user === "user_invalid_credentials") {
+      //   form.setError("root", {
+      //     message: "Invalid credentials. Please check the email and password.",
+      //     type: "custom",
+      //   });
+      // }
+
+      if (user.data) {
+        await loginIn(user.data.userId);
+        router.push("/");
+      }
     } catch (error) {
-      setIsLoading(false);
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
+
+    form.setError("root", {
+      message: "Something went wrong, please try again",
+      type: "custom",
+    });
   }
 
   return (
@@ -82,20 +119,21 @@ function RegisterForm({ user }: { user: User }) {
 
         <section className="space-y-6">
           <div className="mb-9 space-y-1">
-            <h2 className="sub-header">Personal Informartion</h2>
+            <h2 className="sub-header">Personal Information</h2>
           </div>
         </section>
 
+        <CustomFormField
+          fieldType={FormFieldType.INPUT}
+          control={form.control}
+          name="name"
+          label="Full name"
+          placeholder="John Doe"
+          iconSrc="/assets/icons/user.svg"
+          iconAlt="user"
+          readOnly={isReadOnly}
+        />
         <div className="flex flex-col gap-6 xl:flex-row">
-          <CustomFormField
-            fieldType={FormFieldType.INPUT}
-            control={form.control}
-            name="name"
-            label="Full name"
-            placeholder="John Doe"
-            iconSrc="/assets/icons/user.svg"
-            iconAlt="user"
-          />
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
@@ -104,14 +142,20 @@ function RegisterForm({ user }: { user: User }) {
             placeholder="johndoe@email.com"
             iconSrc="/assets/icons/email.svg"
             iconAlt="email"
+            readOnly={isReadOnly}
           />
-          <CustomFormField
-            fieldType={FormFieldType.PHONE_INPUT}
-            control={form.control}
-            name="phone"
-            label="Phone Number"
-            placeholder="(555) 123-4567"
-          />
+          {!user && (
+            <CustomFormField
+              fieldType={FormFieldType.PASSWORD}
+              control={form.control}
+              name="password"
+              label="Passsword"
+              placeholder="********"
+              iconSrc="/assets/icons/lock.svg"
+              iconAlt="password"
+              readOnly={isReadOnly}
+            />
+          )}
         </div>
 
         <div className="flex flex-col gap-6 xl:flex-row">
@@ -120,6 +164,7 @@ function RegisterForm({ user }: { user: User }) {
             control={form.control}
             name="birthDate"
             label="Date of Birth"
+            readOnly={isReadOnly}
           />
 
           <CustomFormField
@@ -133,8 +178,9 @@ function RegisterForm({ user }: { user: User }) {
                   className="flex h-11 gap-6 xl:justify-between"
                   onChange={field.onChange}
                   defaultValue={field.value}
+                  disabled={isReadOnly}
                 >
-                  {GenderOptions.map((option) => (
+                  {GenderOptionsEnum.options.map((option) => (
                     <Label key={option} className="radio-group cursor-pointer">
                       <RadioGroupItem value={option} id={option} />
                       {option}
@@ -143,6 +189,7 @@ function RegisterForm({ user }: { user: User }) {
                 </RadioGroup>
               </FormControl>
             )}
+            readOnly={isReadOnly}
           />
         </div>
 
@@ -153,6 +200,7 @@ function RegisterForm({ user }: { user: User }) {
             name="address"
             label="Address"
             placeholder="18th Street, San diego"
+            readOnly={isReadOnly}
           />
           <CustomFormField
             fieldType={FormFieldType.INPUT}
@@ -160,104 +208,164 @@ function RegisterForm({ user }: { user: User }) {
             name="occupation"
             label="Occupation"
             placeholder="Bartender"
+            readOnly={isReadOnly}
           />
         </div>
 
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
-            fieldType={FormFieldType.INPUT}
+            fieldType={FormFieldType.SELECT}
             control={form.control}
-            name="emergencyContactName"
-            label="Emergency contact name"
-            placeholder="Guardian's name"
-          />
+            name="monthlyIncome"
+            label="Monthly income"
+            placeholder="Select your monthly income:"
+            readOnly={isReadOnly}
+          >
+            {MonthlyIncomeEnum.options.map((monthlyIncome) => (
+              <SelectItem
+                key={monthlyIncome}
+                value={monthlyIncome}
+                className="hover:bg-dark-500 transition duration-500 cursor-pointer"
+              >
+                <p>{monthlyIncome}</p>
+              </SelectItem>
+            ))}
+          </CustomFormField>
 
           <CustomFormField
             fieldType={FormFieldType.PHONE_INPUT}
             control={form.control}
-            name="emergencyContactNumber"
-            label="Emergency Contact Number"
+            name="phoneNumber"
+            label="Phone Number"
             placeholder="(555) 123-4567"
+            readOnly={isReadOnly}
           />
         </div>
 
         <section className="space-y-6">
           <div className="mb-9 space-y-1">
-            <h2 className="sub-header">Medical Informartion</h2>
+            <h2 className="sub-header">Vehicle Information</h2>
           </div>
         </section>
 
-        <CustomFormField
-          fieldType={FormFieldType.SELECT}
-          control={form.control}
-          name="primaryPhysician"
-          label="Primary Physician"
-          placeholder="Select a physician"
-        >
-          {Doctors.map((doctor) => (
-            <SelectItem key={doctor.name} value={doctor.name}>
-              <div className="flex cursor-pointer items-center gap-2">
-                <Image
-                  src={doctor.image}
-                  width={32}
-                  height={32}
-                  alt={`Doctor ${doctor.name} image`}
-                  className="rounded-full border border-dark-500"
-                />
-                <p>{doctor.name}</p>
-              </div>
-            </SelectItem>
-          ))}
-        </CustomFormField>
-
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
-            name="insuranceProvider"
-            label="Insurance provider"
-            placeholder="BlueCross Blue Shield"
+            name="vehicleMakeModelYear"
+            label="Make, Model & Year"
+            placeholder="ex: Land Cruiser Toyota 2024"
+            readOnly={isReadOnly}
           />
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
-            name="insurancePolicyNumber"
-            label="Insurance Policy Number"
+            name="vehicleIdentificationNumber"
+            label="Vehicle Identification Number"
             placeholder="ABC12345689"
+            readOnly={isReadOnly}
           />
         </div>
 
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
-            fieldType={FormFieldType.TEXTAREA}
+            fieldType={FormFieldType.INPUT}
             control={form.control}
-            name="allergies"
-            label="Allergies (if any)"
-            placeholder="Peanuts, Penicillin, Pollen"
+            name="vehicleLicensePlateNumber"
+            label="License Plate Number"
+            placeholder="ex: A12-BCD"
+            readOnly={isReadOnly}
           />
           <CustomFormField
-            fieldType={FormFieldType.TEXTAREA}
+            fieldType={FormFieldType.INPUT}
             control={form.control}
-            name="currentMedication"
-            label="Current medication (if any)"
-            placeholder="Ibuprofen 200mg, Paracetamol 500mg"
+            name="vehicleColor"
+            label="Vehicle Color"
+            placeholder="ex: Blue"
+            readOnly={isReadOnly}
           />
         </div>
 
         <div className="flex flex-col gap-6 xl:flex-row">
           <CustomFormField
-            fieldType={FormFieldType.TEXTAREA}
+            fieldType={FormFieldType.INPUT}
             control={form.control}
-            name="familyMedicalHistory"
-            label="Family medical history"
-            placeholder="Mother had brain cancer, Father had heart disease"
+            name="vehicleCurrentMileage"
+            label="Odometer Reading (Current Mileage)"
+            placeholder="ex: 2000KM"
+            readOnly={isReadOnly}
           />
+          <CustomFormField
+            fieldType={FormFieldType.SELECT}
+            control={form.control}
+            name="vehicleFuelType"
+            label="Fuel Type"
+            placeholder="Select the car fuel type:"
+            readOnly={isReadOnly}
+          >
+            {VehicleFuelTypeEnum.options.map((fuelType) => (
+              <SelectItem
+                key={fuelType}
+                value={fuelType}
+                className="hover:bg-dark-500 transition duration-500 cursor-pointer"
+              >
+                <p>{fuelType}</p>
+              </SelectItem>
+            ))}
+          </CustomFormField>
+        </div>
+
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.SELECT}
+            control={form.control}
+            name="vehicleHowWasAcquired"
+            label="Do you own, lease, or finance the vehicle?"
+            placeholder="Select which the situation is:"
+            readOnly={isReadOnly}
+          >
+            {VehicleHowWasAcquiredEnum.options.map((howWasAcquired) => (
+              <SelectItem
+                key={howWasAcquired}
+                value={howWasAcquired}
+                className="hover:bg-dark-500 transition duration-500 cursor-pointer"
+              >
+                <p>{howWasAcquired}</p>
+              </SelectItem>
+            ))}
+          </CustomFormField>
+          <CustomFormField
+            fieldType={FormFieldType.SELECT}
+            control={form.control}
+            name="vehicleUseFrequency"
+            label="Frequency of Vehicle Use"
+            placeholder="Select your frequency of vehicle use:"
+            readOnly={isReadOnly}
+          >
+            {VehicleUseFrequencyEnum.options.map((howWasAcquired) => (
+              <SelectItem
+                key={howWasAcquired}
+                value={howWasAcquired}
+                className="hover:bg-dark-500 transition duration-500 cursor-pointer"
+              >
+                <p>{howWasAcquired}</p>
+              </SelectItem>
+            ))}
+          </CustomFormField>
+        </div>
+
+        <div className="">
           <CustomFormField
             fieldType={FormFieldType.TEXTAREA}
             control={form.control}
-            name="pastMedicalHistory"
-            label="Past medical history"
-            placeholder="Appendectomy, Tonsillectomy"
+            name="vehiclePreviousAccidentsOrDamage"
+            label="Previous Accidents or Damage"
+            placeholder={
+              !isReadOnly
+                ? "ex: My vehicle has been involved in one incidents.  In February 2022, where I was stopped at a red light, and another car hit me from behind."
+                : ""
+            }
+            readOnly={isReadOnly}
           />
         </div>
 
@@ -268,67 +376,119 @@ function RegisterForm({ user }: { user: User }) {
         </section>
 
         <CustomFormField
-          fieldType={FormFieldType.SELECT}
-          control={form.control}
-          name="identificationType"
-          label="Identification type"
-          placeholder="Select an identification type"
-        >
-          {IdentificationTypes.map((type) => (
-            <SelectItem key={type} value={type}>
-              {type}
-            </SelectItem>
-          ))}
-        </CustomFormField>
-
-        <CustomFormField
           fieldType={FormFieldType.INPUT}
           control={form.control}
-          name="identificationNumber"
-          label="Identification number"
-          placeholder="123456789"
+          name="driverLicenseNumber"
+          label="Driver's License Number"
+          placeholder="ex: 123 456 789"
+          readOnly={isReadOnly}
+        />
+
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.DATE_PICKER}
+            control={form.control}
+            name="driverLicenseExpirationDate"
+            label="Driver's License Expiration Date"
+            readOnly={isReadOnly}
+          />
+
+          <CustomFormField
+            fieldType={FormFieldType.SKELETON}
+            control={form.control}
+            name="driverLicenseEverBeenSuspended"
+            label="Has your Driver's License ever been suspended or revoked"
+            renderSkeleton={(field) => (
+              <FormControl>
+                <RadioGroup
+                  className="flex h-11 gap-6 xl:justify-between"
+                  onChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={isReadOnly}
+                >
+                  {YesOrNoEnum.options.map((option) => (
+                    <Label key={option} className="radio-group cursor-pointer">
+                      <RadioGroupItem value={option} id={option} />
+                      {option}
+                    </Label>
+                  ))}
+                </RadioGroup>
+              </FormControl>
+            )}
+            readOnly={isReadOnly}
+          />
+        </div>
+
+        <CustomFormField
+          fieldType={FormFieldType.TEXTAREA}
+          control={form.control}
+          name="driverLicensePreviousViolations"
+          label="Have you ever had any traffic violations or infractions? (Violation Type, Date of Violation and etc)"
+          placeholder={
+            !isReadOnly
+              ? "ex: Yes, I have had a few minor violations. The most recent was a speeding ticket in May 2023 and a failure to yield in September 2022."
+              : ""
+          }
+          readOnly={isReadOnly}
         />
 
         <CustomFormField
           fieldType={FormFieldType.SKELETON}
           control={form.control}
-          name="identificationDocument"
-          label="Scanned copy of identification document"
+          name="driverLicenseDocument"
+          label="Scanned Copy of Driver's License"
           renderSkeleton={(field) => (
-            <FormControl>
-              <FileUploader files={field.value} onChange={field.onChange} />
+            <FormControl className="file-upload">
+              {documentUrl ? (
+                <div className="file-upload_label">
+                  <Image
+                    src={`${documentUrl}`}
+                    width={250}
+                    height={250}
+                    alt="Document copy"
+                    unoptimized
+                    className="md:max-w-56"
+                  />
+                </div>
+              ) : (
+                <FileUploader files={field.value} onChange={field.onChange} />
+              )}
             </FormControl>
           )}
+          readOnly={isReadOnly}
         />
 
-        <section className="space-y-6">
-          <div className="mb-9 space-y-1">
-            <h2 className="sub-header">Consent and privacy</h2>
-          </div>
-        </section>
+        {!isReadOnly && (
+          <>
+            <section className="space-y-6">
+              <div className="mb-9 space-y-1">
+                <h2 className="sub-header">Consent and privacy</h2>
+              </div>
+            </section>
 
-        <CustomFormField
-          fieldType={FormFieldType.CHECKBOX}
-          control={form.control}
-          name="treatmentConsent"
-          label="I consent to treatment"
-        />
+            <CustomFormField
+              fieldType={FormFieldType.CHECKBOX}
+              control={form.control}
+              name="disclosureConsent"
+              label="I agree to the use and disclosure of my information to evaluate my eligibility for car insurance."
+              readOnly={isReadOnly}
+            />
 
-        <CustomFormField
-          fieldType={FormFieldType.CHECKBOX}
-          control={form.control}
-          name="disclosureConsent"
-          label="I consent to disclousure of information"
-        />
-
-        <CustomFormField
-          fieldType={FormFieldType.CHECKBOX}
-          control={form.control}
-          name="privacyConsent"
-          label="I consent to privacy policy"
-        />
-
-        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+            <CustomFormField
+              fieldType={FormFieldType.CHECKBOX}
+              control={form.control}
+              name="privacyConsent"
+              label="I consent to privacy policy"
+              readOnly={isReadOnly}
+            />
+            {errors && (
+              <FormMessage className="shad-error">
+                {errors.root?.message}
+              </FormMessage>
+            )}
+            <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+          </>
+        )}
       </form>
     </Form>
   );

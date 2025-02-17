@@ -1,36 +1,49 @@
 import { Models } from "node-appwrite";
+import {
+  CreateServiceParams,
+  Gender,
+  MonthlyIncome,
+  VehicleFuelType,
+  VehicleHowWasAcquired,
+  VehicleUseFrequency,
+} from ".";
 
-export interface Patient extends Models.Document {
+export interface User extends Models.Document {
   userId: string;
+
   name: string;
   email: string;
-  phone: string;
-  birthDate: Date;
+  password: string;
+  birthDate: string;
   gender: Gender;
   address: string;
   occupation: string;
-  emergencyContactName: string;
-  emergencyContactNumber: string;
-  primaryPhysician: string;
-  insuranceProvider: string;
-  insurancePolicyNumber: string;
-  allergies: string | undefined;
-  currentMedication: string | undefined;
-  familyMedicalHistory: string | undefined;
-  pastMedicalHistory: string | undefined;
-  identificationType: string | undefined;
-  identificationNumber: string | undefined;
-  identificationDocument: FormData | undefined;
+  monthlyIncome: MonthlyIncome;
+  phoneNumber: string;
+
+  // Vehicle informations
+  vehicleMakeModelYear: string;
+  vehicleIdentificationNumber: string;
+  vehicleLicensePlateNumber: string;
+  vehicleColor: string;
+  vehicleCurrentMileage: string;
+  vehicleFuelType: VehicleFuelType;
+  vehicleHowWasAcquired: VehicleHowWasAcquired;
+  vehicleUseFrequency: VehicleUseFrequency;
+  vehiclePreviousAccidentsOrDamage?: string;
+
+  // Driver's License
+  driverLicenseNumber: string;
+  driverLicenseExpirationDate: string;
+  driverLicenseEverBeenSuspended: boolean;
+  driverLicensePreviousViolations?: string;
+
+  driverLicenseDocumentId: string;
+  driverLicenseDocumentUrl: string;
+  disclosureConsent: boolean;
   privacyConsent: boolean;
 }
-
-export interface Appointment extends Models.Document {
-  patient: Patient;
-  schedule: Date;
-  status: Status;
-  primaryPhysician: string;
-  reason: string;
-  note: string;
+export interface Service extends CreateServiceParams, Models.Document {
   userId: string;
-  cancelationReason: string;
+  userName: string;
 }

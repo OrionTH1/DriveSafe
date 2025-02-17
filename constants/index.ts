@@ -1,4 +1,4 @@
-import {
+import type {
   Gender,
   MonthlyIncome,
   VehicleFuelType,
@@ -6,7 +6,7 @@ import {
   VehicleUseFrequency,
   YesOrNo,
 } from "@/types";
-import { User } from "@/types/appwrite.types";
+import type { User } from "@/types/appwrite.types";
 import { z } from "zod";
 
 export function getPatientFormDefaultValues(
@@ -112,7 +112,13 @@ export const VehicleUseFrequencyEnum = z.enum([
 
 export const YesOrNoEnum = z.enum(["Yes", "No"]);
 
-export const Services = ["Rent a car"];
+export const Services = [
+  "Collision Insurance",
+  "Theft and Robbery Insurance",
+  "Vehicle Total and Partial Loss",
+  "Replacement Car",
+  "Natural Events Coverage",
+];
 
 export const StatusIcon = {
   approved: "/assets/icons/check.svg",

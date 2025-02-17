@@ -15,29 +15,6 @@ async function ListService() {
     return redirect("/login");
   }
   const services = await getServiceByUserId(session.userId);
-  // const appointments = {
-  //   totalCount: 10,
-  //   scheduleCount: 0,
-  //   pendingCount: 0,
-  //   canceledCount: 0,
-  //   documents: [
-  //     {
-  //       $collectionId: "67b0f8930005e6e0b9a7",
-  //       $createdAt: "2025-02-16T16:16:35.924+00:00",
-  //       $databaseId: "67a79dbf000f660fbdd2",
-  //       $id: "67b20f6300301e6ae748",
-  //       $permissions: [],
-  //       $updatedAt: "2025-02-16T16:16:35.924+00:00",
-  //       note: "123",
-  //       reason: "123",
-  //       reasonForCancellation: "",
-  //       serviceName: "Rent a car",
-  //       status: "pending",
-  //       userId: "67b038b100069cd9768c",
-  //       userName: "Matheus Emanoel",
-  //     },
-  //   ],
-  // };
 
   if (!services)
     throw new Error(

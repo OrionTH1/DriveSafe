@@ -8,6 +8,7 @@ const mailersend = new MailerSend({
 });
 
 export const sendEmail = async (
+export const sendEmailVerification = async (
   toEmail: string,
   name: string,
   code: string

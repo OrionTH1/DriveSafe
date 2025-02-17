@@ -18,7 +18,7 @@ import {
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { sendEmail } from "@/lib/actions/email.actions";
+import { sendEmailVerification } from "@/lib/actions/email.actions";
 import { loginIn } from "@/lib/actions/auth.actions";
 import { useRouter } from "next/navigation";
 
@@ -39,7 +39,7 @@ function OtpModal({
   const router = useRouter();
 
   useEffect(() => {
-    sendEmail(email, name, code);
+    sendEmailVerification(email, name, code);
     console.log("Email enviado");
     console.log(code);
   }, [code, email, name]);

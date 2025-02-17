@@ -3,6 +3,16 @@
 @tailwind utilities;
 
 /* ========================================== TAILWIND STYLES */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-box-shadow: 0 0 0px 1000px var(--input-box-shadow-color, #ffffff00)
+    inset;
+}
+
 @layer base {
   /* Remove scrollbar */
   .remove-scrollbar::-webkit-scrollbar {
@@ -78,16 +88,16 @@
   }
 
   .request-details {
-    @apply flex w-full flex-col items-center gap-8 border-y-2 border-dark-400 py-8 md:w-fit md:flex-row;
+    @apply flex w-full flex-col items-center gap-2 border-y-2 border-dark-400 py-8 md:w-fit md:flex-row;
   }
 
   /* ===== ADMIN */
   .admin-header {
-    @apply sticky top-3 z-20 mx-3 flex items-center justify-between rounded-2xl bg-dark-200 px-[5%] py-5 shadow-lg xl:px-12;
+    @apply sticky top-3 z-20 mx-3 mb-3 flex items-center justify-between rounded-2xl bg-dark-200 px-[5%] py-5 shadow-lg xl:px-12;
   }
 
   .admin-main {
-    @apply flex flex-col items-center space-y-6 px-[5%] pb-12 xl:space-y-12 xl:px-12;
+    @apply flex flex-col items-center pt-8 space-y-6 px-[5%] pb-12 xl:space-y-12 xl:px-12;
   }
 
   .admin-stat {
@@ -105,7 +115,7 @@
 
   /* ==== File Upload */
   .file-upload {
-    @apply text-12-regular flex cursor-pointer  flex-col items-center justify-center gap-3 rounded-md border border-dashed border-dark-500 bg-dark-400 p-5;
+    @apply text-12-regular flex flex-col items-center justify-center gap-3 rounded-md border border-dashed border-dark-500 bg-dark-400 p-5;
   }
 
   .file-upload_label {
@@ -114,7 +124,7 @@
 
   /* ==== Stat Card */
   .stat-card {
-    @apply flex flex-1 flex-col gap-6 rounded-2xl bg-cover p-6 shadow-lg;
+    @apply flex flex-1 h-full flex-col gap-6 rounded-2xl bg-cover p-6 shadow-lg;
   }
 
   /* ==== Status Badge */
@@ -224,6 +234,18 @@
 
   .shad-select-content {
     @apply bg-dark-400 border-dark-500 !important;
+  }
+
+  .shad-dropdown-trigger {
+    @apply bg-dark-400 border-dark-500 p-5 focus:ring-0 focus:ring-offset-0 hover:bg-dark-500 transition duration-300  !important;
+  }
+
+  .shad-dropdown-content {
+    @apply p-2 text-sm outline-0 rounded-md hover:bg-dark-500 transition duration-300 !important;
+  }
+
+  .shad-tooltip-content {
+    @apply p-2 text-sm bg-dark-400 border-dark-500 outline-0 rounded-md hover:bg-dark-500 transition duration-300 !important;
   }
 
   .shad-dialog {

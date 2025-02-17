@@ -54,7 +54,7 @@ async function ListService() {
         </section>
 
         <DataTable
-          columns={adminColumns}
+          columns={userColumns}
           data={services.documents as Service[]}
         />
       </main>

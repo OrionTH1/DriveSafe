@@ -91,18 +91,8 @@ export const adminColumns: ColumnDef<Service>[] = [
     cell: ({ row: { original: data } }) => {
       return (
         <div className="flex gap-1">
-          <AppointmentModal
-            type="approve"
-            serviceId={data.userId}
-            userId={data.userId}
-            service={data}
-          />
-          <AppointmentModal
-            type="cancel"
-            serviceId={data.userId}
-            userId={data.userId}
-            service={data}
-          />
+          <ServiceModal type="approve" service={data} />
+          <ServiceModal type="cancel" service={data} />
         </div>
       );
     },

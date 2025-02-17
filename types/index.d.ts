@@ -1,4 +1,4 @@
-import {
+import type {
   VehicleUseFrequencyEnum,
   GenderOptionsEnum,
   MonthlyIncomeEnum,
@@ -6,8 +6,8 @@ import {
   VehicleHowWasAcquiredEnum,
   YesOrNoEnum,
 } from "@/constants";
-import { z } from "zod";
-import { Service } from "./appwrite.types";
+import type { z } from "zod";
+import type { Service } from "./appwrite.types";
 
 declare type SearchParamProps = {
   params: Promise<{ [key: string]: string }>;
@@ -76,11 +76,10 @@ declare type CreateServiceParams = {
   reason: string;
   status: Status;
   note?: string;
-  reasonForCancellation?: string;
 };
 
 declare type UpdateServiceParams = {
   service: Service;
-  type: string;
+  status: Status;
   note: string;
 };

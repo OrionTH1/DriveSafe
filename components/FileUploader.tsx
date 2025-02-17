@@ -20,7 +20,7 @@ function FileUploader({ files, onChange }: FilesUploaderProps) {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <div {...getRootProps()} className="file-upload">
+    <div {...getRootProps()} className="file-upload cursor-pointer">
       <input {...getInputProps()} />
       {files && files?.length > 0 ? (
         <Image

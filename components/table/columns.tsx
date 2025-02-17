@@ -60,11 +60,11 @@ export const adminColumns: ColumnDef<Service>[] = [
         return (
           <TooltipProvider delayDuration={0} disableHoverableContent={false}>
             <Tooltip>
-              <TooltipTrigger className="cursor-text">
+              <TooltipTrigger className="cursor-text w-36 truncate">
                 {row.original.reason}
               </TooltipTrigger>
               <TooltipContent className="shad-tooltip-content">
-                <p>I need a rental car!</p>
+                <p>{row.original.reason}</p>
                 <TooltipArrow className="fill-white" />
               </TooltipContent>
             </Tooltip>
@@ -154,11 +154,11 @@ export const userColumns: ColumnDef<Service>[] = [
         return (
           <TooltipProvider delayDuration={0} disableHoverableContent={false}>
             <Tooltip>
-              <TooltipTrigger className="cursor-text">
-                I need a...
+              <TooltipTrigger className="cursor-text w-32 truncate">
+                {row.original.note}
               </TooltipTrigger>
               <TooltipContent className="shad-tooltip-content">
-                <p>I need a rental car!</p>
+                <p>{row.original.note}</p>
                 <TooltipArrow className="fill-white" />
               </TooltipContent>
             </Tooltip>

@@ -42,7 +42,7 @@ async function UserInformations({ params }: SearchParamProps) {
   //   vehiclePreviousAccidentsOrDamage: "",
   //   vehicleUseFrequency: "Daily",
   // } as User;
-  if (!user) throw new Error("User doesn't exists");
+  if (!user.data) throw new Error("User doesn't exists");
 
   return (
     <div>
@@ -50,8 +50,8 @@ async function UserInformations({ params }: SearchParamProps) {
         <section className="remove-scrollbar container">
           <div className="w-full max-w-[960px] flex flex-col py-10">
             <RegisterForm
-              user={user}
-              documentUrl={user.driverLicenseDocumentUrl}
+              user={user.data}
+              documentUrl={user.data.driverLicenseDocumentUrl}
             />
 
             <p className="copyright pt-8">© 2025 DriveSafe</p>

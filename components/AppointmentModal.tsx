@@ -11,22 +11,16 @@ import {
 import { useState } from "react";
 import { Button } from "./ui/button";
 import clsx from "clsx";
-import AppointmentForm from "./forms/AppointmentForm";
-import { Appointment } from "@/types/appwrite.types";
+import ServiceForm from "./forms/ServiceForm";
+import { Service } from "@/types/appwrite.types";
 
 interface AppointmentModalProps {
-  type: "schedule" | "cancel";
-  patientId: string;
+  type: "approve" | "cancel";
+  serviceId: string;
   userId: string;
-  appointment?: Appointment;
-  description: string;
+  service: Service;
 }
-function AppointmentModal({
-  type,
-  patientId,
-  userId,
-  appointment,
-}: AppointmentModalProps) {
+function AppointmentModal({ type, service, userId }: AppointmentModalProps) {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -34,7 +28,7 @@ function AppointmentModal({
         <Button
           variant="ghost"
           className={clsx("capitalize", {
-            "text-green-500": type === "schedule",
+            "text-green-500": type === "approve",
           })}
         >
           {type}
@@ -42,16 +36,15 @@ function AppointmentModal({
       </DialogTrigger>
       <DialogContent className="shad-dialog sm:max-w-md">
         <DialogHeader className="mb-4 space-y-3">
-          <DialogTitle className="capitalize">{type} Appointment</DialogTitle>
+          <DialogTitle className="capitalize">{type} Service</DialogTitle>
           <DialogDescription>
-            Please fill in the following details to {type} an appointment
+            Please fill in the following details to {type} the service requested
           </DialogDescription>
         </DialogHeader>
-        <AppointmentForm
-          userId={userId}
-          patientId={patientId}
+        <ServiceForm
           type={type}
-          appointment={appointment}
+          service={service}
+          userId={userId}
           setOpen={setOpen}
         />
       </DialogContent>

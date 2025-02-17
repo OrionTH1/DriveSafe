@@ -45,7 +45,7 @@ interface CustomProps {
   showTimeSelect?: boolean;
   children?: React.ReactNode;
   renderSkeleton?: (field: any) => React.ReactNode;
-  readOnly: boolean;
+  readOnly?: boolean;
 }
 
 const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {

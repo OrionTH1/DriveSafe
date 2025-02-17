@@ -8,7 +8,7 @@ function Home() {
         <section className="w-full space-y-4">
           <h1 className="header">Welcome 👋</h1>
           <p className="text-dark-700">
-            Start the day with managing new appointments
+            Start the day with managing your services
           </p>
         </section>
 
@@ -16,13 +16,13 @@ function Home() {
           <HomeButton
             label="Request a service"
             description="Request your service with our car insurance"
-            icon="/assets/icons/appointments.svg"
+            icon="/assets/icons/check.svg"
             redirect="/services/request"
           />
           <HomeButton
             label="View a service"
             description="View your peding services"
-            icon="/assets/icons/appointments.svg"
+            icon="/assets/icons/schedule.svg"
             redirect="/services/list"
           />
         </section>

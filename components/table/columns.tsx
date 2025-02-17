@@ -13,7 +13,7 @@ import {
 } from "../ui/tooltip";
 import { TooltipArrow } from "@radix-ui/react-tooltip";
 import { formatDateTime } from "@/lib/utils";
-import AppointmentModal from "../AppointmentModal";
+import ServiceModal from "../ServiceModal";
 
 export const adminColumns: ColumnDef<Service>[] = [
   {

@@ -130,7 +130,7 @@ export const CreateServiceSchema = z.object({
     .max(500, "Reason must be at most 500 characters"),
 });
 
-export const ScheduleAppointmentSchema = z.object({
+export const ScheduleServiceSchema = z.object({
   serviceName: z.string().min(0, "Select at least one doctor"),
   reason: z
     .string()
@@ -146,7 +146,7 @@ export const ScheduleAppointmentSchema = z.object({
     .max(500, "Reason must be at most 500 characters"),
 });
 
-export const CancelAppointmentSchema = z.object({
+export const CancelServiceSchema = z.object({
   serviceName: z.string().min(0, "Select at least one doctor"),
   note: z
     .string()
@@ -167,8 +167,8 @@ export function getServiceSchema(type: string) {
     case "create":
       return CreateServiceSchema;
     case "cancel":
-      return CancelAppointmentSchema;
+      return CancelServiceSchema;
     default:
-      return ScheduleAppointmentSchema;
+      return ScheduleServiceSchema;
   }
 }

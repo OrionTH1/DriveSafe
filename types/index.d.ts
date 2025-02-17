@@ -26,7 +26,7 @@ declare type VehicleUseFrequency = z.infer<typeof VehicleUseFrequencyEnum>;
 
 declare type VehicleHowWasAcquired = z.infer<typeof VehicleHowWasAcquiredEnum>;
 
-declare type Status = "pending" | "scheduled" | "canceled";
+declare type Status = "pending" | "approved" | "canceled";
 
 declare type ReturnedUser =
   | {

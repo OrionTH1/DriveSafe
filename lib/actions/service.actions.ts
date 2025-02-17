@@ -70,7 +70,7 @@ export const getRecentServiceList = async () => {
 
     const counts = (services.documents as Service[]).reduce((acc, service) => {
       switch (service.status) {
-        case "scheduled":
+        case "approved":
           acc.scheduleCount++;
           break;
         case "pending":

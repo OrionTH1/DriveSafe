@@ -115,7 +115,7 @@ export const YesOrNoEnum = z.enum(["Yes", "No"]);
 export const Services = ["Rent a car"];
 
 export const StatusIcon = {
-  scheduled: "/assets/icons/check.svg",
+  approved: "/assets/icons/check.svg",
   pending: "/assets/icons/pending.svg",
   canceled: "/assets/icons/cancelled.svg",
 };

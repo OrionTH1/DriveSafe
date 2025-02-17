@@ -45,7 +45,7 @@ interface CustomProps {
   showTimeSelect?: boolean;
   children?: React.ReactNode;
   renderSkeleton?: (field: any) => React.ReactNode;
-  readOnly?: boolean;
+  readOnly: boolean;
 }
 
 const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
@@ -80,7 +80,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               placeholder={placeholder}
               {...field}
               className="shad-input border-0"
-              readOnly
+              readOnly={readOnly ? true : false}
             />
           </FormControl>
         </div>
@@ -96,7 +96,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             className="shad-textArea"
             disabled={props.disabled}
             maxLength={400}
-            readOnly
+            readOnly={readOnly ? true : false}
           />
         </FormControl>
       );
@@ -112,7 +112,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             value={field.value as E164Number | undefined}
             onChange={field.onChange}
             className="input-phone"
-            readOnly
+            readOnly={readOnly ? true : false}
           />
         </FormControl>
       );
@@ -135,7 +135,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               showTimeSelect={showTimeSelect ?? false}
               timeInputLabel="Time:"
               wrapperClassName="date-picker"
-              disabled={readOnly}
+              disabled={readOnly ? true : false}
             />
           </FormControl>
         </div>
@@ -151,7 +151,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             <FormControl>
               <SelectTrigger
                 className="shad-select-trigger"
-                disabled={readOnly}
+                disabled={readOnly ? true : false}
               >
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>

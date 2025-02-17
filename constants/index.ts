@@ -1,82 +1,118 @@
-export const GenderOptions = ["Male", "Female", "Other"];
+import {
+  Gender,
+  MonthlyIncome,
+  VehicleFuelType,
+  VehicleHowWasAcquired,
+  VehicleUseFrequency,
+  YesOrNo,
+} from "@/types";
+import { User } from "@/types/appwrite.types";
+import { z } from "zod";
 
-export const PatientFormDefaultValues = {
-  name: "",
-  email: "",
-  phone: "",
-  birthDate: new Date(Date.now()),
-  gender: "Male" as Gender,
-  address: "",
-  occupation: "",
-  emergencyContactName: "",
-  emergencyContactNumber: "",
-  primaryPhysician: "",
-  insuranceProvider: "",
-  insurancePolicyNumber: "",
-  allergies: "",
-  currentMedication: "",
-  familyMedicalHistory: "",
-  pastMedicalHistory: "",
-  identificationType: "Birth Certificate",
-  identificationNumber: "",
-  identificationDocument: [],
-  treatmentConsent: false,
-  disclosureConsent: false,
-  privacyConsent: false,
-};
+export function getPatientFormDefaultValues(
+  user?: User,
+  documentFile?: File[]
+) {
+  console.log(documentFile);
 
-export const IdentificationTypes = [
-  "Birth Certificate",
-  "Driver's License",
-  "Medical Insurance Card/Policy",
-  "Military ID Card",
-  "National Identity Card",
-  "Passport",
-  "Resident Alien Card (Green Card)",
-  "Social Security Card",
-  "State ID Card",
-  "Student ID Card",
-  "Voter ID Card",
-];
+  return {
+    birthDate: new Date(Date.now()),
 
-export const Doctors = [
+    name: user ? user.name : "",
+    email: user ? user.email : "",
+    password: "",
+    gender: user ? user.gender : ("Male" as Gender),
+    address: user ? user.address : "",
+    occupation: user ? user.occupation : "",
+    monthlyIncome: user
+      ? user.monthlyIncome
+      : ("US$ 1.000 - US$ 2.000" as MonthlyIncome),
+    phoneNumber: user ? user.phoneNumber : "",
+
+    // Vehicle informations
+    vehicleMakeModelYear: user ? user.vehicleMakeModelYear : "",
+    vehicleIdentificationNumber: user ? user.vehicleIdentificationNumber : "",
+    vehicleLicensePlateNumber: user ? user.vehicleLicensePlateNumber : "",
+    vehicleColor: user ? user.vehicleColor : "",
+    vehicleCurrentMileage: user ? user.vehicleCurrentMileage : "",
+    vehicleFuelType: user
+      ? user.vehicleFuelType
+      : ("Gasoline" as VehicleFuelType),
+    vehicleHowWasAcquired: user
+      ? user.vehicleHowWasAcquired
+      : ("I'm financing the vehicle." as VehicleHowWasAcquired),
+    vehicleUseFrequency: user
+      ? user.vehicleUseFrequency
+      : ("Daily" as VehicleUseFrequency),
+    vehiclePreviousAccidentsOrDamage: user
+      ? (user.vehiclePreviousAccidentsOrDamage as YesOrNo)
+      : "",
+
+    // Driver's License
+    driverLicenseNumber: user ? user.driverLicenseNumber : "",
+    driverLicenseExpirationDate: user
+      ? new Date(user.driverLicenseExpirationDate)
+      : new Date(Date.now()),
+    driverLicenseEverBeenSuspended: user
+      ? user.driverLicenseEverBeenSuspended
+        ? "Yes"
+        : "No"
+      : ("No" as YesOrNo),
+    driverLicensePreviousViolations: user
+      ? user.driverLicensePreviousViolations
+      : "",
+
+    driverLicenseDocument: [] as File[],
+    disclosureConsent: false,
+    privacyConsent: false,
+  };
+}
+
+export const GenderOptionsEnum = z.enum(["Male", "Female", "Other"], {
+  message: "Select a gender",
+});
+
+export const MonthlyIncomeEnum = z.enum(
+  [
+    "US$ 0 - US$ 1.000",
+    "US$ 1.000 - US$ 2.000",
+    "US$ 2.000 - US$ 3.000",
+    "US$ 3.000 - Other",
+  ],
   {
-    image: "/assets/images/dr-green.png",
-    name: "John Green",
-  },
+    message: "Select your Monthly Income",
+  }
+);
+
+export const VehicleFuelTypeEnum = z.enum(
+  ["Gasoline", "Ethanol", "Diesel", "Eletric", "Other"],
   {
-    image: "/assets/images/dr-cameron.png",
-    name: "Leila Cameron",
-  },
+    message: "Select the vehicle fuel type",
+  }
+);
+
+export const VehicleHowWasAcquiredEnum = z.enum(
+  [
+    "I own the vehicle outright.",
+    "I lease the vehicle.",
+    "I'm financing the vehicle.",
+  ],
   {
-    image: "/assets/images/dr-livingston.png",
-    name: "David Livingston",
-  },
-  {
-    image: "/assets/images/dr-peter.png",
-    name: "Evan Peter",
-  },
-  {
-    image: "/assets/images/dr-powell.png",
-    name: "Jane Powell",
-  },
-  {
-    image: "/assets/images/dr-remirez.png",
-    name: "Alex Ramirez",
-  },
-  {
-    image: "/assets/images/dr-lee.png",
-    name: "Jasmine Lee",
-  },
-  {
-    image: "/assets/images/dr-cruz.png",
-    name: "Alyana Cruz",
-  },
-  {
-    image: "/assets/images/dr-sharma.png",
-    name: "Hardik Sharma",
-  },
-];
+    message: "Provide what the vehicle's situation is",
+  }
+);
+
+export const VehicleUseFrequencyEnum = z.enum([
+  "Daily",
+  "Several times a week",
+  "Weekly",
+  "Monthly",
+  "Occasional/Only on weekends",
+]);
+
+export const YesOrNoEnum = z.enum(["Yes", "No"]);
+
+export const Services = ["Rent a car"];
 
 export const StatusIcon = {
   scheduled: "/assets/icons/check.svg",

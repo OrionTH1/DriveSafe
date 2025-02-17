@@ -24,6 +24,7 @@ import { Label } from "./ui/label";
 export enum FormFieldType {
   INPUT = "input",
   TEXTAREA = "textarea",
+  PASSWORD = "password",
   PHONE_INPUT = "phoneInput",
   CHECKBOX = "checkbox",
   DATE_PICKER = "datePicker",
@@ -44,6 +45,7 @@ interface CustomProps {
   showTimeSelect?: boolean;
   children?: React.ReactNode;
   renderSkeleton?: (field: any) => React.ReactNode;
+  readOnly?: boolean;
 }
 
 const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
@@ -57,6 +59,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     showTimeSelect,
     dateFormat,
     renderSkeleton,
+    readOnly,
   } = props;
 
   switch (fieldType) {
@@ -77,6 +80,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               placeholder={placeholder}
               {...field}
               className="shad-input border-0"
+              readOnly
             />
           </FormControl>
         </div>
@@ -92,6 +96,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             className="shad-textArea"
             disabled={props.disabled}
             maxLength={400}
+            readOnly
           />
         </FormControl>
       );
@@ -107,6 +112,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             value={field.value as E164Number | undefined}
             onChange={field.onChange}
             className="input-phone"
+            readOnly
           />
         </FormControl>
       );
@@ -129,6 +135,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               showTimeSelect={showTimeSelect ?? false}
               timeInputLabel="Time:"
               wrapperClassName="date-picker"
+              disabled={readOnly}
             />
           </FormControl>
         </div>
@@ -142,7 +149,10 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
         <FormControl>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger className="shad-select-trigger">
+              <SelectTrigger
+                className="shad-select-trigger"
+                disabled={readOnly}
+              >
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
@@ -165,6 +175,32 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             <Label htmlFor={name} className="checkbox-label">
               {label}
             </Label>
+          </div>
+        </FormControl>
+      );
+    }
+
+    case FormFieldType.PASSWORD: {
+      return (
+        <FormControl>
+          <div className="flex rounded-md border border-dark-500 bg-dark-400">
+            {iconSrc && (
+              <Image
+                src={iconSrc}
+                width={24}
+                height={24}
+                alt={iconAlt || "icon"}
+                className="ml-2"
+              />
+            )}
+            <FormControl>
+              <Input
+                placeholder={placeholder}
+                type="password"
+                {...field}
+                className="shad-input border-0"
+              />
+            </FormControl>
           </div>
         </FormControl>
       );

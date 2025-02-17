@@ -1,9 +1,9 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
 import StatusBadge from "../StatusBadge";
-import { Service } from "@/types/appwrite.types";
+import type { Service } from "@/types/appwrite.types";
 import Link from "next/link";
 import {
   Tooltip,
@@ -21,10 +21,10 @@ export const adminColumns: ColumnDef<Service>[] = [
     cell: ({ row }) => <p className="text-14-medium">{row.index + 1}</p>,
   },
   {
-    accessorKey: "user",
-    header: "User",
+    accessorKey: "serviceName",
+    header: "Service",
     cell: ({ row }) => (
-      <p className="text-14-medium">{row.original.userName}</p>
+      <p className="text-14-medium">{row.original.serviceName}</p>
     ),
   },
 
@@ -105,10 +105,10 @@ export const userColumns: ColumnDef<Service>[] = [
     cell: ({ row }) => <p className="text-14-medium">{row.index + 1}</p>,
   },
   {
-    accessorKey: "user",
-    header: "User",
+    accessorKey: "serviceName",
+    header: "Service",
     cell: ({ row }) => (
-      <p className="text-14-medium">{row.original.userName}</p>
+      <p className="text-14-medium">{row.original.serviceName}</p>
     ),
   },
 

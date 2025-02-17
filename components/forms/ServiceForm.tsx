@@ -2,25 +2,28 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import { Form, FormMessage } from "../ui/form";
 import SubmitButton from "../SubmitButton";
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { getServiceSchema } from "@/lib/validation";
 import { useRouter } from "next/navigation";
 import { createService, updateService } from "@/lib/actions/service.actions";
-import { Status, UpdateServiceParams } from "@/types";
-import { Service } from "@/types/appwrite.types";
+import type { Status, UpdateServiceParams } from "@/types";
+import type { Service } from "@/types/appwrite.types";
+import { Services } from "@/constants";
+import { SelectItem } from "../ui/select";
+import { sendEmailWithServiceStats } from "@/lib/actions/email.actions";
+import { getUser } from "@/lib/actions/user.actions";
 
 interface ServiceFormProps {
   type: "create" | "cancel" | "approve";
   service?: Service;
-  userId?: string;
   setOpen?: Dispatch<SetStateAction<boolean>>;
 }
-function ServiceForm({ type, service, userId, setOpen }: ServiceFormProps) {
+function ServiceForm({ type, service, setOpen }: ServiceFormProps) {
   const router = useRouter();
   const serviceFormValidation = getServiceSchema(type);
   const form = useForm<z.infer<typeof serviceFormValidation>>({
@@ -47,7 +50,7 @@ function ServiceForm({ type, service, userId, setOpen }: ServiceFormProps) {
     let status: Status;
     switch (type) {
       case "approve":
-        status = "scheduled";
+        status = "approved";
         break;
       case "cancel":
         status = "canceled";
@@ -81,19 +84,29 @@ function ServiceForm({ type, service, userId, setOpen }: ServiceFormProps) {
       else {
         if (!service) return;
         const serviceToUpdate = {
-          userId,
           service,
-          type,
+          status,
           note,
         } as UpdateServiceParams;
 
-        const updatedservice = await updateService(serviceToUpdate);
-        if (!updatedservice) {
+        const updatedService = await updateService(serviceToUpdate);
+        if (!updatedService) {
           throw new Error("Error trying to register a new service");
         }
 
-        if (updatedservice) {
+        if (updatedService) {
           if (setOpen) {
+            const user = await getUser(updatedService.userId);
+            if (user.data) {
+              const { status, serviceName, note } = updatedService;
+              sendEmailWithServiceStats(
+                user.data.email,
+                user.data.name,
+                status,
+                serviceName,
+                note
+              );
+            }
             setOpen(false);
           }
           form.reset();
@@ -131,12 +144,41 @@ function ServiceForm({ type, service, userId, setOpen }: ServiceFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
         {type === "create" && (
-          <section className="mb-12 space-y-4">
-            <h1 className="header">New service</h1>
-            <p className="text-dark-700">Request a new service</p>
-          </section>
+          <>
+            <section className="mb-12 space-y-4">
+              <h1 className="header">New service</h1>
+              <p className="text-dark-700">Request a new service</p>
+            </section>
+
+            <CustomFormField
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              name="serviceName"
+              label="Service"
+              placeholder="Select the service"
+            >
+              {Services.map((services) => (
+                <SelectItem
+                  key={services}
+                  value={services}
+                  className="hover:bg-dark-500 transition duration-500 cursor-pointer"
+                >
+                  <p>{services}</p>
+                </SelectItem>
+              ))}
+            </CustomFormField>
+            <div className="flex flex-col gap-6 xl:flex-row">
+              <CustomFormField
+                fieldType={FormFieldType.TEXTAREA}
+                control={form.control}
+                name="reason"
+                label="Reason"
+                placeholder="ex: I need to a replacement car"
+              />
+            </div>
+          </>
         )}
-        {type !== "cancel" && (
+        {type === "approve" && (
           <>
             <div className="flex flex-col gap-6 xl:flex-row">
               <CustomFormField

@@ -14,11 +14,6 @@
 <a href="https://github.com/github_username/repo_name"><strong>View Demo »</strong></a>  
 </div>
 
-<h3 align="center">DriveSafe</h3>
-
-<div align="center">
-  DriveSafe is an institutional website for a car insurance company, designed to provide information about services, plans, and benefits. The project features a modern and responsive interface, ensuring a great user experience.
-</div>
 <br/>
 <br/>
 <!-- TABLE OF CONTENTS -->
@@ -41,6 +36,7 @@
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
+
 
 <!-- ABOUT THE PROJECT -->
 ## <a name="about-the-project">📢 About The Project</a>

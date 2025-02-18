@@ -110,19 +110,19 @@ Create a new file named `.env.local` in the root of your project and add the fol
 
 ```env
 #APPWRITE
-PROJECT_ID=67a79d350037617bba14
-API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZraXZqd3luYnlzc3hmenB3aXpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3NzYyNTcsImV4cCI6MjA1NTM1MjI1N30.A27o_kVFIDbkes00pwCzMRTIvlJTltaCDnyri4kc4Qk
-DATABASE_ID=67a79dbf000f660fbdd2
-SERVICES_COLLECTION_ID=67b0f8930005e6e0b9a7
-USERS_COLLECTION_ID=67af9bf0000123eba8dc
-NEXT_PUBLIC_BUCKET_ID=67a79fa000365fcb63b5
-NEXT_PUBLIC_ENDPOINT=https://vkivjwynbyssxfzpwizd.supabase.co
+PROJECT_ID=
+API_KEY=
+DATABASE_ID=
+SERVICES_COLLECTION_ID=
+USERS_COLLECTION_ID=
+NEXT_PUBLIC_BUCKET_ID=
+NEXT_PUBLIC_ENDPOINT=
 
 #MAILERSEND
-EMAIL_API_KEY=mlsn.5ce3cedb180d2d1bff43d2fedef2e370141f3274780ca2db29017f6a7f8a9c71
+EMAIL_API_KEY=
 
-SENTRY_AUTH_TOKEN=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
-SESSION_SECRET="oK/HMB4rpvM0UZ6hSg12Oh7g+7tbvC1WD3UDivZupAA="
+SENTRY_AUTH_TOKEN=
+SESSION_SECRET=
 ```
 
 Replace the placeholder values with your actual Appwrite and Mailersend credentials. You can obtain these credentials by signing up on the [Appwrite website](https://appwrite.io/) and [Mailersend Website](https://www.mailersend.com/).

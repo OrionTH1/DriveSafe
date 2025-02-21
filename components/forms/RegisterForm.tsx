@@ -87,6 +87,7 @@ function RegisterForm({
         await loginIn(user.data.userId);
         router.push("/");
       }
+      return;
     } catch (error) {
       console.error(error);
     } finally {

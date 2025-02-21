@@ -3,8 +3,6 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 
 interface HomeButtonProps {
-  // type: Status;
-  // count: number;
   label: string;
   description: string;
   icon: string;

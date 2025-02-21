@@ -9,12 +9,7 @@ import type {
 import type { User } from "@/types/appwrite.types";
 import { z } from "zod";
 
-export function getPatientFormDefaultValues(
-  user?: User,
-  documentFile?: File[]
-) {
-  console.log(documentFile);
-
+export function getPatientFormDefaultValues(user?: User) {
   return {
     birthDate: new Date(Date.now()),
 

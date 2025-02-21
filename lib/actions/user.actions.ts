@@ -14,35 +14,7 @@ import {
 import { InputFile } from "node-appwrite/file";
 import { CreateUserParams, ReturnedUser } from "@/types";
 import bcrypt from "bcryptjs";
-import { User } from "@/types/appwrite.types";
-
-// export const createUser = async (user: CreateUserParams) => {
-//   try {
-//     const newUser = await users.create(
-//       ID.unique(),
-//       user.email,
-//       user.phone,
-//       undefined,
-//       user.name
-//     );
-
-//     console.log(newUser);
-//     return parseStringify(newUser) as User;
-
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   } catch (error: any) {
-//     // Check existing user
-//     console.log(error);
-//     if (error && error?.code === 409) {
-//       const existingUser = await users.list([
-//         Query.equal("email", [user.email]),
-//       ]);
-
-//       return parseStringify(existingUser.users[0]);
-//     }
-//     console.error("An error occurred while creating a new user:", error);
-//   }
-// };
+import type { User } from "@/types/appwrite.types";
 
 export const verifyIfUserExists = async (
   name: string,

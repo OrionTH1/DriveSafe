@@ -83,13 +83,6 @@ function RegisterForm({
 
       const user = await registerUser(patientData);
 
-      // if (user === "user_invalid_credentials") {
-      //   form.setError("root", {
-      //     message: "Invalid credentials. Please check the email and password.",
-      //     type: "custom",
-      //   });
-      // }
-
       if (user.data) {
         await loginIn(user.data.userId);
         router.push("/");

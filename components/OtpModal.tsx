@@ -40,8 +40,6 @@ function OtpModal({
 
   useEffect(() => {
     sendEmailVerification(email, name, code);
-    console.log("Email enviado");
-    console.log(code);
   }, [code, email, name]);
 
   async function validatePasskey(

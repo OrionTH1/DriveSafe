@@ -141,8 +141,6 @@ export const updateService = async ({
       throw new Error("Service not found");
     }
 
-    // TODO: SMS Notification
-
     revalidatePath("/admin");
     revalidatePath("/");
     return updatedService as Service;

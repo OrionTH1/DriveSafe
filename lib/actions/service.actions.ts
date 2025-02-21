@@ -40,7 +40,7 @@ export const getServiceByUserId = async (userId: string) => {
     const services = await database.listDocuments(
       DATABASE_ID!,
       SERVICES_COLLECTION_ID!,
-      [Query.equal("userId", userId)]
+      [Query.equal("userId", userId), Query.orderDesc("$createdAt")]
     );
     const initialCounts = {
       scheduleCount: 0,

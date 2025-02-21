@@ -1,14 +1,11 @@
 import LoginForm from "@/components/forms/LoginForm";
-import PassKeyModal from "@/components/PassKeyModal";
-import { SearchParamProps } from "@/types";
+
 import Image from "next/image";
 import Link from "next/link";
 
-async function Login({ searchParams }: SearchParamProps) {
-  const isAdmin = (await searchParams)?.admin;
+async function Login() {
   return (
     <div className="flex h-screen max-h-screen">
-      {isAdmin && <PassKeyModal />}
       <section className="remove-scrollbar container my-auto">
         <div className="sub-container max-w-[31rem]">
           <Image
@@ -32,12 +29,6 @@ async function Login({ searchParams }: SearchParamProps) {
             <p className="justify-items-end text-dark-600 xl:text-left">
               © 2025 DriveSafe
             </p>
-
-            <div className="flex gap-x-5">
-              <Link href={"/?admin=true"} className="text-green-500">
-                Admin
-              </Link>
-            </div>
           </div>
         </div>
       </section>

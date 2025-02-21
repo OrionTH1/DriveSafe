@@ -53,6 +53,7 @@ export const sendEmailVerification = async (
   code: string
 ) => {
   const senders = [new Recipient(toEmail, name)];
+
   const variables = [
     {
       email: senders[0].email,

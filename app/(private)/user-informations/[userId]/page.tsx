@@ -1,6 +1,6 @@
 import RegisterForm from "@/components/forms/RegisterForm";
 import { getAllUserInformations } from "@/lib/actions/user.actions";
-import { SearchParamProps } from "@/types";
+import type { SearchParamProps } from "@/types";
 import Image from "next/image";
 
 async function UserInformations({ params }: SearchParamProps) {

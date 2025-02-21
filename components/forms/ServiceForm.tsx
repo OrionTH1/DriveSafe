@@ -123,7 +123,7 @@ function ServiceForm({ type, service, setOpen }: ServiceFormProps) {
     }
   }
 
-  let buttonLabel;
+  let buttonLabel: string;
   switch (type) {
     case "cancel":
       buttonLabel = "Cancel service";
@@ -179,17 +179,15 @@ function ServiceForm({ type, service, setOpen }: ServiceFormProps) {
           </>
         )}
         {type === "approve" && (
-          <>
-            <div className="flex flex-col gap-6 xl:flex-row">
-              <CustomFormField
-                fieldType={FormFieldType.TEXTAREA}
-                control={form.control}
-                name="note"
-                label="Note"
-                placeholder="ex: Prefer a Audio 2025"
-              />
-            </div>
-          </>
+          <div className="flex flex-col gap-6 xl:flex-row">
+            <CustomFormField
+              fieldType={FormFieldType.TEXTAREA}
+              control={form.control}
+              name="note"
+              label="Note"
+              placeholder="ex: Prefer a Audio 2025"
+            />
+          </div>
         )}
         {type === "cancel" && (
           <CustomFormField

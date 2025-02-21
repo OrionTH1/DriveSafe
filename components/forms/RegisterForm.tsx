@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 
 import CustomFormField, { FormFieldType } from "../CustomFormField";
 import { Form, FormControl, FormMessage } from "../ui/form";
@@ -25,9 +25,9 @@ import FileUploader from "../FileUploader";
 import { RegisterFormValidation } from "@/lib/validation";
 import { ID } from "node-appwrite";
 import { registerUser } from "@/lib/actions/user.actions";
-import { CreateUserParams } from "@/types";
+import type { CreateUserParams } from "@/types";
 import { loginIn } from "@/lib/actions/auth.actions";
-import { User } from "@/types/appwrite.types";
+import type { User } from "@/types/appwrite.types";
 import Image from "next/image";
 
 function RegisterForm({

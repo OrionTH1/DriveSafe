@@ -12,7 +12,7 @@ import {
   users,
 } from "../appwrite.config";
 import { InputFile } from "node-appwrite/file";
-import { CreateUserParams, ReturnedUser } from "@/types";
+import type { CreateUserParams, ReturnedUser } from "@/types";
 import bcrypt from "bcryptjs";
 import type { User } from "@/types/appwrite.types";
 

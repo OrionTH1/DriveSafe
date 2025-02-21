@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { DataTable } from "@/components/table/DataTable";
 import StatCard from "@/components/StatCard";
 

@@ -123,7 +123,7 @@ function ServiceForm({ type, service, setOpen }: ServiceFormProps) {
     }
   }
 
-  let buttonLabel: string;
+  let buttonLabel: string | undefined;
   switch (type) {
     case "cancel":
       buttonLabel = "Cancel service";

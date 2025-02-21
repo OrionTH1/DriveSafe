@@ -56,7 +56,7 @@ export const adminColumns: ColumnDef<Service>[] = [
     accessorKey: "reason",
     header: "Request reason",
     cell: ({ row }) => {
-      if (row.original.note) {
+      if (row.original.reason) {
         return (
           <TooltipProvider delayDuration={0} disableHoverableContent={false}>
             <Tooltip>

@@ -61,7 +61,7 @@ export const RegisterFormValidation = z.object({
     .max(30, "Vehicle Identification Number must be at most 30 characters"),
   vehicleColor: z
     .string()
-    .min(6, "Vehicle color is required")
+    .min(1, "Vehicle color is required")
     .max(30, "Vehicle color must be at most 30 characters"),
   vehicleCurrentMileage: z
     .string()

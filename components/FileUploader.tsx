@@ -17,7 +17,11 @@ function FileUploader({ files, onChange }: FilesUploaderProps) {
     },
     [onChange]
   );
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: { "image/": [".png", ".jpeg", ".jpg"] },
+    maxSize: 1 * 1000 * 1000,
+    onDrop,
+  });
 
   return (
     <div {...getRootProps()} className="file-upload cursor-pointer">
@@ -43,7 +47,7 @@ function FileUploader({ files, onChange }: FilesUploaderProps) {
               <span className="text-green-500">Click to upload</span> or drag
               and drop
             </p>
-            <p>SVG, PNG or JPG (max 5MB)</p>
+            <p> PNG, JPEG or JPG (max 1MB)</p>
           </div>
         </>
       )}

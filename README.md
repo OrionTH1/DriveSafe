@@ -146,6 +146,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 Matheus Emanoel - [Linkedin](https://www.linkedin.com/in/matheusemanoeldev/) - [Twitter](https://twitter.com/OrionTH1) <br/>
 Email: buss.matheusemanoel@gmail.com<br/>
-Project Link: [Demo](https://questmind-project.vercel.app/) - [Github](https://github.com/OrionTH1/study-with-exercices/)
+Project Link: [Demo](https://drive-safe-car.vercel.app/) - [Github](https://github.com/OrionTH1/DriveSafe)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

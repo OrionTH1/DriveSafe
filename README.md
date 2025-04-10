@@ -3,9 +3,7 @@
 
 <div align="center">
   <br />
-    <a href="https://youtu.be/lEflo_sc82g?feature=shared" target="_blank">
-      <img src="https://github.com/user-attachments/assets/0e2f6590-11f8-43d0-bc57-5e9e8aa028bc" alt="Project Banner">
-    </a>
+  <img src="https://github.com/user-attachments/assets/0e2f6590-11f8-43d0-bc57-5e9e8aa028bc" alt="Project Banner">
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/matheusemanoeldev/)
 [![X](https://img.shields.io/badge/X-000?style=for-the-badge&logo=x)](https://x.com/OrionTH1)
